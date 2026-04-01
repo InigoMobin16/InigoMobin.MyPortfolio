@@ -1,0 +1,34 @@
+<div style="max-width:580px;margin:32px auto;background:#1a1a1a;border-radius:10px;overflow:hidden;font-family:'Segoe UI',Arial,sans-serif;">
+  <div style="background:#1a1a1a;border-bottom:2px solid #ff6a00;padding:24px 32px 16px;">
+    <h2 style="margin:0;color:#ff6a00;font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">&#9889; New Contact Message Received</h2>
+  </div>
+  <div style="padding:24px 32px 28px;">
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#888;margin-bottom:5px;font-weight:600;">&#128100; Full Name</div>
+      <div style="font-size:14px;color:#f0f0f0;background:#232323;border-radius:6px;padding:10px 14px;border-left:3px solid #ff6a00;word-break:break-word;">@{triggerBody()?['name']}</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#888;margin-bottom:5px;font-weight:600;">&#9993; Email Address</div>
+      <div style="font-size:14px;color:#f0f0f0;background:#232323;border-radius:6px;padding:10px 14px;border-left:3px solid #ff6a00;word-break:break-word;">@{triggerBody()?['email']}</div>
+    </div>
+    <hr style="border:none;border-top:1px solid #2a2a2a;margin:4px 0 16px;"/>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#888;margin-bottom:5px;font-weight:600;">&#128222; Phone <span style="color:#555;font-size:9px;">(Optional)</span></div>
+      <div style="font-size:14px;color:#f0f0f0;background:#232323;border-radius:6px;padding:10px 14px;border-left:3px solid #ff6a00;word-break:break-word;">@{triggerBody()?['phone']}</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#888;margin-bottom:5px;font-weight:600;">&#127968; Company <span style="color:#555;font-size:9px;">(Optional)</span></div>
+      <div style="font-size:14px;color:#f0f0f0;background:#232323;border-radius:6px;padding:10px 14px;border-left:3px solid #ff6a00;word-break:break-word;">@{triggerBody()?['company']}</div>
+    </div>
+    <hr style="border:none;border-top:1px solid #2a2a2a;margin:4px 0 16px;"/>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#888;margin-bottom:5px;font-weight:600;">&#9889; Interested In</div>
+      <div style="font-size:14px;color:#f0f0f0;background:#232323;border-radius:6px;padding:10px 14px;border-left:3px solid #ff6a00;word-break:break-word;">@{triggerBody()?['services']}</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#888;margin-bottom:5px;font-weight:600;">&#128172; Message</div>
+      <div style="font-size:14px;color:#f0f0f0;background:#232323;border-radius:6px;padding:14px;border-left:3px solid #ff6a00;line-height:1.75;white-space:pre-wrap;word-break:break-word;min-height:60px;">@{triggerBody()?['message']}</div>
+    </div>
+  </div>
+  <div style="background:#111;padding:14px 32px;text-align:center;color:#555;font-size:10px;letter-spacing:1.2px;">This message was submitted via the website contact form.</div>
+</div>
