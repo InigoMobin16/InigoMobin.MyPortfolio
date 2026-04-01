@@ -119,7 +119,7 @@ document.querySelectorAll('.profile-img').forEach(img => {
 });
 
 // ── POWER AUTOMATE ENDPOINT ────────────────
-const FLOW_URL = 'https://7a4523ea31d6e7049a4560bf496545.d8.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3dba03a9ba8a4bf4a6d19257122a4f0e/triggers/manual/paths/invoke?api-version=1';
+const FLOW_URL = 'https://7a4523ea31d6e7049a4560bf496545.d8.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3dba03a9ba8a4bf4a6d19257122a4f0e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9XJc0JpjFZV-_zdMSJBbKCOh82DeewlXGp4WcX7SP64';
 
 /*
  * JSON SCHEMA for Power Automate trigger (use in "When a HTTP request is received"):
@@ -132,10 +132,9 @@ const FLOW_URL = 'https://7a4523ea31d6e7049a4560bf496545.d8.environment.api.powe
  *     "phone":    { "type": ["string", "null"] },
  *     "company":  { "type": ["string", "null"] },
  *     "services": { "type": ["string", "null"] },
- *     "message":  { "type": "string" },
- *     "htmlBody": { "type": "string" }
+ *     "message":  { "type": "string" }
  *   },
- *   "required": ["name", "email", "message", "htmlBody"]
+ *   "required": ["name", "email", "message"]
  * }
  *
  * SAMPLE PAYLOAD (with values):
@@ -145,8 +144,7 @@ const FLOW_URL = 'https://7a4523ea31d6e7049a4560bf496545.d8.environment.api.powe
  *   "phone":    "+91 98765 43210",
  *   "company":  "Acme Corp",
  *   "services": "D365 Business Central, Power Platform",
- *   "message":  "I'd like to discuss a BC upgrade project.",
- *   "htmlBody": "<html>...</html>"
+ *   "message":  "I'd like to discuss a BC upgrade project."
  * }
  *
  * SAMPLE PAYLOAD (null fields):
@@ -156,84 +154,9 @@ const FLOW_URL = 'https://7a4523ea31d6e7049a4560bf496545.d8.environment.api.powe
  *   "phone":    null,
  *   "company":  null,
  *   "services": null,
- *   "message":  "Quick question about Power Platform.",
- *   "htmlBody": "<html>...</html>"
+ *   "message":  "Quick question about Power Platform."
  * }
  */
-
-function buildEmailHtml(data) {
-  const row = (label, value, isHighlight) => value ? `
-    <tr>
-      <td style="padding:10px 16px;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;width:130px;vertical-align:top;border-bottom:1px solid #1e1e1e;">${label}</td>
-      <td style="padding:10px 16px;font-family:Arial,sans-serif;font-size:14px;color:${isHighlight ? '#FF5C00' : '#f0ece4'};vertical-align:top;border-bottom:1px solid #1e1e1e;">${value}</td>
-    </tr>` : '';
-
-  return `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"/></head>
-<body style="margin:0;padding:0;background:#0a0a0a;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:40px 20px;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="background:#111;border:1px solid #222;border-radius:16px;overflow:hidden;">
-
-        <!-- Header -->
-        <tr>
-          <td colspan="2" style="background:linear-gradient(135deg,#FF5C00,#FFB800);padding:28px 32px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <div style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#000;opacity:.7;margin-bottom:4px;">New Contact Request</div>
-                  <div style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#000;">Portfolio Inquiry</div>
-                </td>
-                <td align="right">
-                  <div style="background:#000;color:#FF5C00;font-family:Arial,sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;padding:6px 14px;border-radius:6px;text-transform:uppercase;">IM · Verdier</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <!-- Fields -->
-        <tr><td colspan="2">
-          <table width="100%" cellpadding="0" cellspacing="0">
-            ${row('Full Name',  data.name,     true)}
-            ${row('Email',      data.email,    true)}
-            ${row('Phone',      data.phone    || 'Not provided', false)}
-            ${row('Company',    data.company  || 'Not provided', false)}
-            ${row('Interested In', data.services || 'Not specified', false)}
-          </table>
-        </td></tr>
-
-        <!-- Message -->
-        <tr>
-          <td colspan="2" style="padding:24px 32px 8px;">
-            <div style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#FF5C00;margin-bottom:12px;">Message</div>
-            <div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.7;color:#d0ccc4;background:#0a0a0a;border:1px solid #222;border-left:3px solid #FF5C00;border-radius:8px;padding:18px 20px;">
-              ${data.message.replace(/\n/g, '<br/>')}
-            </div>
-          </td>
-        </tr>
-
-        <!-- Footer -->
-        <tr>
-          <td colspan="2" style="padding:24px 32px;border-top:1px solid #1e1e1e;margin-top:16px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td style="font-family:Arial,sans-serif;font-size:11px;color:#555;">Sent via portfolio contact form · inigo-mobin-verdier-a.com</td>
-                <td align="right">
-                  <a href="mailto:${data.email}" style="background:#FF5C00;color:#000;font-family:Arial,sans-serif;font-size:12px;font-weight:700;text-decoration:none;padding:8px 18px;border-radius:6px;letter-spacing:.5px;">Reply →</a>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
-}
 
 // ── CONTACT FORM ───────────────────────────
 const form       = document.getElementById('contactForm');
@@ -297,20 +220,12 @@ if (form) {
 
     // Build payload
     const payload = {
-      name:    nameInput.value.trim(),
-      email:   emailInput.value.trim(),
-      phone:   (document.getElementById('cf-phone')?.value.trim()) || null,
-      company: (document.getElementById('cf-company')?.value.trim()) || null,
+      name:     nameInput.value.trim(),
+      email:    emailInput.value.trim(),
+      phone:    (document.getElementById('cf-phone')?.value.trim()) || null,
+      company:  (document.getElementById('cf-company')?.value.trim()) || null,
       services: services.length ? services.join(', ') : null,
-      message: msgInput.value.trim(),
-      htmlBody: buildEmailHtml({
-        name:    nameInput.value.trim(),
-        email:   emailInput.value.trim(),
-        phone:   document.getElementById('cf-phone')?.value.trim() || null,
-        company: document.getElementById('cf-company')?.value.trim() || null,
-        services: services.length ? services.join(', ') : null,
-        message: msgInput.value.trim()
-      })
+      message:  msgInput.value.trim()
     };
 
     // Show loading state
@@ -376,28 +291,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 const sections = document.querySelectorAll('section[id]');
 const navAs    = document.querySelectorAll('.nav-link');
-
-new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      navAs.forEach(a => {
-        a.style.color = '';
-        if (a.getAttribute('href') === '#' + e.target.id) a.style.color = 'var(--c1)';
-      });
-    }
-  });
-}, { threshold: 0.35 }).observe.bind(
-  new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        navAs.forEach(a => {
-          a.style.color = '';
-          if (a.getAttribute('href') === '#' + e.target.id) a.style.color = 'var(--c1)';
-        });
-      }
-    });
-  }, { threshold: 0.35 })
-);
 
 // Properly observe sections
 const sectionObs = new IntersectionObserver(entries => {
