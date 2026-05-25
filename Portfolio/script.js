@@ -2,43 +2,52 @@
    PORTFOLIO SCRIPT — Bold Creative Edition
    ========================================= */
 
-// ── CUSTOM CURSOR ──────────────────────────
+// ── CUSTOM CURSOR (desktop only) ───────────
 const cursor   = document.getElementById('cursor');
 const follower = document.getElementById('cursorFollower');
-let mx = 0, my = 0, fx = 0, fy = 0;
 
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cursor.style.left = mx + 'px';
-  cursor.style.top  = my + 'px';
-});
+const isTouchDevice = () => window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
-function animateFollower() {
-  fx += (mx - fx) * 0.12;
-  fy += (my - fy) * 0.12;
-  follower.style.left = fx + 'px';
-  follower.style.top  = fy + 'px';
-  requestAnimationFrame(animateFollower);
+if (!isTouchDevice()) {
+  let mx = 0, my = 0, fx = 0, fy = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top  = my + 'px';
+  });
+
+  function animateFollower() {
+    fx += (mx - fx) * 0.12;
+    fy += (my - fy) * 0.12;
+    follower.style.left = fx + 'px';
+    follower.style.top  = fy + 'px';
+    requestAnimationFrame(animateFollower);
+  }
+  animateFollower();
+
+  // Scale cursor on hover
+  document.querySelectorAll('a, button, .proj-card, .win-card, .skill-tags span').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width   = '18px';
+      cursor.style.height  = '18px';
+      cursor.style.background = 'rgba(255,92,0,0.6)';
+      follower.style.width  = '56px';
+      follower.style.height = '56px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width   = '10px';
+      cursor.style.height  = '10px';
+      cursor.style.background = 'var(--c1)';
+      follower.style.width  = '36px';
+      follower.style.height = '36px';
+    });
+  });
+} else {
+  // Hide cursor elements on touch devices
+  if (cursor)   cursor.style.display   = 'none';
+  if (follower) follower.style.display = 'none';
 }
-animateFollower();
-
-// Scale cursor on hover
-document.querySelectorAll('a, button, .proj-card, .win-card, .skill-tags span').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.width   = '18px';
-    cursor.style.height  = '18px';
-    cursor.style.background = 'rgba(255,92,0,0.6)';
-    follower.style.width  = '56px';
-    follower.style.height = '56px';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.width   = '10px';
-    cursor.style.height  = '10px';
-    cursor.style.background = 'var(--c1)';
-    follower.style.width  = '36px';
-    follower.style.height = '36px';
-  });
-});
 
 // ── NAV SCROLL ─────────────────────────────
 const nav = document.getElementById('nav');
